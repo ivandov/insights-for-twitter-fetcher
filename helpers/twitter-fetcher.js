@@ -1,6 +1,7 @@
 require('dotenv').config();
 var https = require('https');
 var cache = require('persistent-cache');
+var cloudant = require('./cloudant');
 
 cache = cache({base: './'});
 
@@ -57,6 +58,8 @@ function getTweets(query){
         console.log("Result Count: " + resultCount);
 
         cache.put("results", resultCount);
+
+        persist(JSON.parse(body).tweets);
       });
     });
   });
@@ -70,4 +73,12 @@ function ISODateString(d) {
          + pad(d.getUTCHours())+':'
          + pad(d.getUTCMinutes())+':'
          + pad(d.getUTCSeconds())+'Z'
+}
+
+
+function persist(tweets){
+  if(process.env.PERSIST && process.env.PERSIST.toUpperCase() === "CLOUDANT"){
+    console.log("persisting " + tweets.length + " tweets");
+    cloudant.insert(tweets);
+  }
 }

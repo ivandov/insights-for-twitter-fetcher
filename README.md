@@ -8,12 +8,22 @@ The fetcher automatically starts a fetch based on settings in `.env` and keeps a
 
 
 ### Pre-Reqs
-Modify and save the `template.env` file with as `.env` and include the following minimum Environment Variable requirements:
+Modify and save the `template.env` file as `.env` and include the following minimum environment variable requirements:
  - `INSIGHTS_TWITTER_USERNAME=generated-uuid`
  - `INSIGHTS_TWITTER_PASSWORD=generated-pass`
  - `QUERY="IBM lang:en"`
 
 The username and password are generated when creating a new service on Bluemix. The `QUERY` string is set based on the REST API [Query Language](https://console.ng.bluemix.net/docs/services/Twitter/twitter_rest_apis.html#querylanguage).
+
+
+### Persisting to DB
+If local cache storage is insufficient, you can choose to persist the fetched tweets into a database. Currently the only supported DB is Cloudant, but MongoDB should be added soon. To write to a DB, the following additional environment variables are required:
+ - `PERSIST=CLOUDANT`
+ - `DB_NAME=something_related_to_query` - A name that corresponds to the query this fetcher is running
+ - `CLOUDANT_HOST=127.0.0.1` - IP of your Cloudant host
+ - `CLOUDANT_PORT=8080` - the port which your Cloudant service listens on
+ - `CLOUDANT_USER=user`
+ - `CLOUDANT_PASS=pass`
 
 ### Optional settings
  - Use the `QUERY_INTERVAL` setting to specify how often this fetch should be run
@@ -23,7 +33,7 @@ The username and password are generated when creating a new service on Bluemix. 
 
 
 ### Work Items
- - Persist the current fetch into a DB such as MongoDB or Cloudant
+ - Persist the current fetch into a DB such as MongoDB or Cloudant (WIP)
  - Set env variable for how far back to go on first query
  - Keep local cache longer than latest pull
  - Create Dockerfile for portability
