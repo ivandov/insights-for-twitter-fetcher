@@ -2,8 +2,7 @@ require('dotenv').config();
 var https = require('https');
 var cache = require('persistent-cache');
 
-
-cache = cache();
+cache = cache({base: './'});
 
 var apiUri =  "https://" + process.env.INSIGHTS_TWITTER_USERNAME + ":" + process.env.INSIGHTS_TWITTER_PASSWORD +
               "@cdeservice.mybluemix.net/api/v1/messages/";
@@ -62,7 +61,6 @@ function getTweets(query){
     });
   });
 }
-
 
 function ISODateString(d) {
     function pad(n) {return n<10 ? '0'+n : n}

@@ -3,7 +3,7 @@ var router = express.Router();
 var https = require('https');
 var cache = require('persistent-cache')
 
-cache = cache();
+cache = cache({base: './'});
 
 /* GET users listing. */
 router.get('/', function(req, res, next) {

@@ -2,7 +2,7 @@ var express = require('express');
 var router = express.Router();
 var cache = require('persistent-cache');
 
-cache = cache();
+cache = cache({base: './'});
 
 /* GET home page. */
 router.get('/', function(req, res, next) {

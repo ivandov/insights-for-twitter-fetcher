@@ -5,7 +5,7 @@
  */
 
 var app = require('../app');
-var fetcher = require('../twitter-fetcher');
+var fetcher = require('../helpers/twitter-fetcher');
 var debug = require('debug')('insights-for-twitter-fetcher:server');
 var http = require('http');
 require('dotenv').config();
@@ -14,12 +14,7 @@ require('dotenv').config();
 /**
   Start the twitter fetcher
 **/
-fetcher.fetch();
-var interval = 1000 * 60 * 5;
-if(process.env.QUERY_INTERVAL){
-  interval = process.env.QUERY_INTERVAL * 1000;
-}
-setInterval(function(){fetcher.fetch()}, interval);
+startFetcher();
 
 /**
  * Get port from environment and store in Express.
@@ -100,4 +95,27 @@ function onListening() {
     ? 'pipe ' + addr
     : 'port ' + addr.port;
   debug('Listening on ' + bind);
+}
+
+
+
+function startFetcher() {
+  fetcher.fetch();
+
+  var interval = 1000 * 60 * 5;
+  if(process.env.QUERY_INTERVAL){
+    interval = process.env.QUERY_INTERVAL * 1000;
+  }
+
+  /**
+    Allow for disabling of automated queries
+  **/
+  if(interval !== 0){
+    interval = parseInt(interval);
+    console.log("Interval set to " + interval + " minutes");
+    setInterval(function(){fetcher.fetch()}, interval);
+  }
+  else{
+    console.log("No interval set - performing one time initial fetch");
+  }
 }
