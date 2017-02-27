@@ -18,14 +18,20 @@ The username and password are generated when creating a new service on Bluemix. 
 
 ### Persisting to DB
 If local cache storage is insufficient, you can choose to persist the fetched tweets into a database. Currently the only supported DB is Cloudant, but MongoDB should be added soon. To write to a DB, the following additional environment variables are required:
- - `PERSIST=CLOUDANT`
- - `DB_NAME=something_related_to_query` - A name that corresponds to the query this fetcher is running
- - `CLOUDANT_HOST=127.0.0.1` - IP of your Cloudant host
- - `CLOUDANT_PORT=8080` - the port which your Cloudant service listens on
- - `CLOUDANT_USER=user`
- - `CLOUDANT_PASS=pass`
+ - `PERSIST=CLOUDANT` or `PERSIST=MONGODB`
+ - `DB_NAME=query_db` - A name that corresponds to the query this fetcher is running
 
-### Optional settings
+##### Cloudant Settings
+  - `CLOUDANT_HOST=127.0.0.1`
+  - `CLOUDANT_PORT=8080`
+  - `CLOUDANT_USER=user`
+  - `CLOUDANT_PASS=pass`
+
+##### MongoDB Settings
+  - `MONGODB_HOST=127.0.0.1`
+  - `MONGODB_PORT=27017`
+
+### Optional Settings
  - Use the `QUERY_INTERVAL` setting to specify how often this fetch should be run
   - Values should be in seconds, default is 5 minutes.
   - `QUERY_INTERVAL=2` - fetches every 2 seconds
@@ -35,7 +41,5 @@ If local cache storage is insufficient, you can choose to persist the fetched tw
 
 
 ### Work Items
- - Persist the current fetch into a DB such as MongoDB or Cloudant (WIP)
- - Set env variable for how far back to go on first query
  - Keep local cache longer than latest pull
  - Create Dockerfile for portability

@@ -2,7 +2,6 @@ require('dotenv').config();
 var https = require('https');
 var cache = require('persistent-cache');
 var moment = require('moment');
-// const fs = require('fs');
 
 cache = cache({base: './', memory: false});
 
@@ -27,7 +26,6 @@ exports.fetch = function fetch(){
 //Performs a search query with the given size
 function getTweets(query){
   cache.get('lastUpdate', function(err, lastUpdate){
-    // var loop = false;
     var timeRanges = []
 
     if(err || lastUpdate === undefined){
@@ -106,11 +104,6 @@ function getResults(timeRange, query){
 
       cache.put("results", resultCount);
 
-      //FIXME maybe remove?
-      var fullTweets = cache.getSync('fullTweets');
-      if(fullTweets === undefined) cache.put('fullTweets', res.tweets);
-      else cache.putSync('fullTweets', fullTweets.concat(res.tweets));
-
       persist(res.tweets);
     });
   }).on("error", function(e){
@@ -118,7 +111,7 @@ function getResults(timeRange, query){
   });
 }
 
-
+//TODO replace all calls with this wrapper (but using moment.js)
 function ISODateString(d) {
     function pad(n) {return n<10 ? '0'+n : n}
     return d.getUTCFullYear()+'-'
@@ -137,22 +130,9 @@ function persist(tweets){
       cloudant.insert(tweets);
     }
 
-    //TODO this should not be needed - convert from DB
-    if(process.env.PERSIST.toUpperCase() === "CSV"){
-      console.log("inserting " + tweets.length + " tweets");
-      var converter = require('json-2-csv');
-      const fs = require('fs');
-
-      converter.json2csv(tweets, function (err, csv) {
-        if (err) console.error(err);
-
-        // fs.appendFile('./cache/tweets.csv', csv, (err2) => {
-        //   if (err2) console.error(err2);
-        //   console.log('The "data to append" was appended to file!');
-        // });
-        console.log(csv);
-      });
-
+    if(process.env.PERSIST.toUpperCase() === "MONGODB"){
+      var mongo = require('./mongodb');
+      mongo.insert(tweets);
     }
   }
 }
