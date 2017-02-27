@@ -30,6 +30,8 @@ If local cache storage is insufficient, you can choose to persist the fetched tw
   - Values should be in seconds, default is 5 minutes.
   - `QUERY_INTERVAL=2` - fetches every 2 seconds
   - `QUERY_INTERVAL=0` - disables automatic interval fetching
+ - Use the `QUERY_HISTORY` setting to specify how many days back the fetch should go
+  - `QUERY_HISTORY=30` - fetches starting 30 days back
 
 
 ### Work Items

@@ -12,11 +12,6 @@ require('dotenv').config();
 
 
 /**
-  Start the twitter fetcher
-**/
-startFetcher();
-
-/**
  * Get port from environment and store in Express.
  */
 
@@ -95,8 +90,10 @@ function onListening() {
     ? 'pipe ' + addr
     : 'port ' + addr.port;
   debug('Listening on ' + bind);
-}
 
+  // Start the twitter fetcher 
+  startFetcher();
+}
 
 
 function startFetcher() {
@@ -112,7 +109,7 @@ function startFetcher() {
   **/
   if(interval !== 0){
     interval = parseInt(interval);
-    console.log("Interval set to " + interval + " minutes");
+    console.log("Interval set to " + parseInt(interval /1000) + " seconds");
     setInterval(function(){fetcher.fetch()}, interval);
   }
   else{
