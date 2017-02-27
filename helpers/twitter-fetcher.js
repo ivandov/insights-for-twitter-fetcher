@@ -67,7 +67,7 @@ function getTweets(query){
       if(process.env.QUERY_HISTORY_API_DELAY) delayBetweenCalls = process.env.QUERY_HISTORY_API_DELAY;
 
       setTimeout( function(){
-        console.log("Historical fetch: " + i + " / " + timeRanges.length);
+        console.log("Fetching: " + (i++) + " / " + timeRanges.length);
         getResults(timeRange, query);
       }, delayBetweenCalls * i);
     });
