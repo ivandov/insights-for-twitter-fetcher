@@ -46,12 +46,12 @@ function getTweets(query){
       }
 
       while(lastUpdate.isBefore(moment.utc())){
-        var from = lastUpdate.format("YYYY-MM-DDTHH:mm:ss[Z]");
+        var from = formatDate(lastUpdate);
         var to = lastUpdate.add(interval, "milliseconds");
 
         if(to.isBefore(moment.utc())){
           lastUpdate = to.clone();
-          timeRanges.push(from + "," + to.format("YYYY-MM-DDTHH:mm:ss[Z]"));
+          timeRanges.push(from + "," + formatDate(to));
         }
       }
 
@@ -64,6 +64,8 @@ function getTweets(query){
     timeRanges.forEach(function(timeRange, i){
       //FIXME make this more elegant
       var delayBetweenCalls = 1000; // 1 second
+      if(process.env.QUERY_HISTORY_API_DELAY) delayBetweenCalls = process.env.QUERY_HISTORY_API_DELAY;
+
       setTimeout( function(){
         console.log("Historical fetch: " + i + " / " + timeRanges.length);
         getResults(timeRange, query);
@@ -95,7 +97,7 @@ function getResults(timeRange, query){
         return;
       }
 
-      var lastUpdate = ISODateString(new Date());
+      var lastUpdate = formatDate(moment.utc());
       cache.put("lastUpdate", lastUpdate);
       cache.put("latestTweets", res)
 
@@ -111,19 +113,15 @@ function getResults(timeRange, query){
   });
 }
 
-//TODO replace all calls with this wrapper (but using moment.js)
-function ISODateString(d) {
-    function pad(n) {return n<10 ? '0'+n : n}
-    return d.getUTCFullYear()+'-'
-         + pad(d.getUTCMonth()+1)+'-'
-         + pad(d.getUTCDate())+'T'
-         + pad(d.getUTCHours())+':'
-         + pad(d.getUTCMinutes())+':'
-         + pad(d.getUTCSeconds())+'Z'
+
+function formatDate(moment) {
+    return moment.format("YYYY-MM-DDTHH:mm:ss[Z]");
 }
 
 
 function persist(tweets){
+  if(tweets.length == 0) return;
+
   if(process.env.PERSIST){
     if(process.env.PERSIST.toUpperCase() === "CLOUDANT"){
       var cloudant = require('./cloudant');
