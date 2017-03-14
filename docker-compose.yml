@@ -2,12 +2,12 @@ version: '2'
 services:
   fetcher:
     build: .
-    name: 9.47.80.57/ddc/twitter-fetcher-s390x:latest
+    name: twitter-fetcher-s390x:latest
     ports:
       - "3000"
     env_file: .env
     environment:
-      - QUERY="IBM lang:en"
+      - QUERY=IBM lang:en
       - QUERY_INTERVAL=120
       - QUERY_HISTORY=5
       - QUERY_HISTORY_API_DELAY=1000
