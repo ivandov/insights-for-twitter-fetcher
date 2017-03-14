@@ -2,7 +2,7 @@ version: '2'
 services:
   fetcher:
     build: .
-    name: twitter-fetcher-s390x:latest
+    image: 9.47.80.57/ddc/twitter-fetcher-s390x:latest
     ports:
       - "3000"
     env_file: .env
