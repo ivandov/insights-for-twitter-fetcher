@@ -64,7 +64,7 @@ function insert(tweets){
 
     request(opts, function(err, res, body) {
       if(err) console.error(err)
-      // console.log("tweet " + tweetId + " stored");
+      if(body) console.log(body)
     });
   }
 
