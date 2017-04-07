@@ -94,8 +94,16 @@ function getResults(timeRange, query){
       body += data;
     });
 
+    //TODO rewrite using request module, handle 500 server error
     response.on('end', function() {
-      var res = JSON.parse(body);
+      var res;
+
+      try {
+        res = JSON.parse(body);
+      } catch(e) {
+        console.error(e); // error in the above string (in this case, yes)!
+        return;
+      }
 
       if(res.error){
         console.error(res);
