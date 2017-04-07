@@ -33,15 +33,14 @@ If local cache storage is insufficient, you can choose to persist the fetched tw
 
 ### Optional Settings
  - Use the `QUERY_INTERVAL` setting to specify how often this fetch should be run
-  - Values should be in seconds, default is 5 minutes.
-  - `QUERY_INTERVAL=2` - fetches every 2 seconds
-  - `QUERY_INTERVAL=0` - disables automatic interval fetching
+   - Values should be in seconds, default is 5 minutes.
+   - `QUERY_INTERVAL=2` - fetches every 2 seconds
+   - `QUERY_INTERVAL=0` - disables automatic interval fetching
  - Use the `QUERY_HISTORY` setting to specify how many days back the fetch should go
-  - `QUERY_HISTORY=30` - fetches starting 30 days back
+   - `QUERY_HISTORY=30` - fetches starting 30 days back
  - Use the `QUERY_HISTORY_API_DELAY` setting to insert a delay between REST API calls when processing a large history backlog. Useful to not inundate the backend APIs with too many requests, which may cause blocking.
-  - `QUERY_HISTORY_API_DELAY=1000` - staggers API calls by 1000 milliseconds (1 second) 
+   - `QUERY_HISTORY_API_DELAY=1000` - staggers API calls by 1000 milliseconds (1 second) 
 
 
 ### Work Items
  - Keep local cache longer than latest pull
- - Create Dockerfile for portability
