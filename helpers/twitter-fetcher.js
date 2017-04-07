@@ -41,8 +41,13 @@ function getTweets(query){
 
       //figure out how many loops we need to do with the current INTERVAL setting
       var interval = 1000 * 60 * 5;
-      if(process.env.QUERY_INTERVAL && process.env.QUERY_INTERVAL != 0){
-        interval = process.env.QUERY_INTERVAL * 1000;
+      if(process.env.QUERY_INTERVAL){
+        if(process.env.QUERY_INTERVAL == 0){
+          interval = 1000 * 60 * 60 * 24 * daysBack
+        }
+        else{
+          interval = process.env.QUERY_INTERVAL * 1000;
+        }
       }
 
       while(lastUpdate.isBefore(moment.utc())){
@@ -67,7 +72,7 @@ function getTweets(query){
       if(process.env.QUERY_HISTORY_API_DELAY) delayBetweenCalls = process.env.QUERY_HISTORY_API_DELAY;
 
       setTimeout( function(){
-        console.log("Fetching: " + (i++) + " / " + timeRanges.length);
+        console.log("Fetching: " + (i+1) + " / " + timeRanges.length);
         getResults(timeRange, query);
       }, delayBetweenCalls * i);
     });
@@ -98,13 +103,13 @@ function getResults(timeRange, query){
       }
 
       var lastUpdate = formatDate(moment.utc());
-      cache.put("lastUpdate", lastUpdate);
-      cache.put("latestTweets", res)
+      cache.putSync("lastUpdate", lastUpdate);
+      cache.putSync("latestTweets", res)
 
       var resultCount = res.search.results;
       console.log(timeQuery + " - " + resultCount + " results");
 
-      cache.put("results", resultCount);
+      cache.putSync("results", resultCount);
 
       persist(res.tweets);
     });
@@ -131,6 +136,11 @@ function persist(tweets){
     if(process.env.PERSIST.toUpperCase() === "MONGODB"){
       var mongo = require('./mongodb');
       mongo.insert(tweets);
+    }
+
+    if(process.env.PERSIST.toUpperCase() === "ZKVSIM"){
+      var zkvsim = require('./zkvsim');
+      zkvsim.insert(tweets);
     }
   }
 }
