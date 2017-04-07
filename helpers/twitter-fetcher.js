@@ -142,5 +142,10 @@ function persist(tweets){
       var zkvsim = require('./zkvsim');
       zkvsim.insert(tweets);
     }
+
+    if(process.env.PERSIST.toUpperCase() === "ZKVSP"){
+      var zkvsim = require('./zkvsp');
+      zkvsim.insert(tweets);
+    }
   }
 }
